@@ -10,7 +10,7 @@ const checkJwt = require("express-jwt");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 8080;
-
+const uri = process.env.ATLAS_URI;
 //using cors for allowing http requests
 app.use(cors());
 //using express json so i can parse JSON
@@ -21,20 +21,49 @@ app.use(morgan("combined"));
 //Tells express where the static files is
 app.use(express.static("../client/build"));
 // for the env file, where the database string is
+let openPaths = [
+  /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
+  "/api/users/authenticate",
+  "/api/users/create",
+  { url: "/api/questions", methods: ["GET"] } // Open GET questions, but not POST.
+];
 
-const uri = process.env.ATLAS_URI; //Using the enviorment file, thats connect to the database
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true
+// Validate the user using authentication. checkJwt checks for auth token.
+const secret = process.env.SECRET || "the cake is a lie";
+if (!process.env.SECRET) console.error("Warning: SECRET is undefined.");
+app.use(checkJwt({ secret: secret }).unless({ path: openPaths }));
+
+// This middleware checks the result of checkJwt
+app.use((err, req, res, next) => {
+  if (err.name === "UnauthorizedError") {
+    // If the user didn't authorize correctly
+    res.status(401).json({ error: err.message }); // Return 401 with error message.
+  } else {
+    next(); // If no errors, send request to next middleware or route handler
+  }
 });
 
-//Making connecting and open mongodb database
-const connection = mongoose.connection;
-connection.once("open", () => {
-  console.log("MongoDB database connection established successfully");
-});
+//requring the user model from the database access layer, using mongoose as a middleware to connect.
+const userDal = require("./dal/user_dal")(mongoose);
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log("Database connected");
+
+    await userDal.testUsers();
+
+    //Routes goes here
+    const usersRouter = require("./routers/user_router")(userDal, secret);
+    app.use("/api/users", usersRouter);
+
+    app.get("*", (req, res) =>
+      res.sendFile(path.resolve("..", "client", "build", "index.html"))
+    );
+
+    await app.listen(port);
+    console.log(`The server is running on ${port}!!`);
+  })
+  .catch(error => {
+    console.error(error);
+  });
