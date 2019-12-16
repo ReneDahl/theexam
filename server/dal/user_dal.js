@@ -18,6 +18,15 @@ class UserDAL {
     return newUser.save();
   }
 
+  async getUser(username) {
+    try {
+      return await this.userModel.findOne({ username: username });
+    } catch (error) {
+      console.error("getUser:", error.message);
+      return {};
+    }
+  }
+
   async getUsers() {
     try {
       return await this.userModel.find({});
@@ -41,6 +50,20 @@ class UserDAL {
       { username: "rdh", password: "12" },
       { username: "mm", password: "13" }
     ];
+
+    let promises = [];
+
+    users.forEach(user => {
+      bcrypt.hash(user.password, 10, (err, hash) => {
+        user.hash = hash; // The hash has been made, and is stored on the user object.
+        delete user.password; // The clear text password is no longer needed
+
+        let newUser = new this.userModel(user);
+        promises.push(newUser.save());
+      });
+    });
+
+    return Promise.all(promises);
   }
 }
 

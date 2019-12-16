@@ -25,7 +25,7 @@ let openPaths = [
   /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
   "/api/users/authenticate",
   "/api/users/create",
-  { url: "/api/questions", methods: ["GET"] } // Open GET questions, but not POST.
+  { url: "/api/books", methods: ["GET"] } // Open GET questions, but not POST.
 ];
 
 // Validate the user using authentication. checkJwt checks for auth token.
@@ -43,19 +43,24 @@ app.use((err, req, res, next) => {
   }
 });
 
-//requring the user model from the database access layer, using mongoose as a middleware to connect.
+//requring the user and book model from the database access layer, using mongoose as a middleware to connect.
 const userDal = require("./dal/user_dal")(mongoose);
+const bookDal = require("./dal/book_dal")(mongoose);
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log("Database connected");
 
+    //
     await userDal.testUsers();
 
     //Routes goes here
     const usersRouter = require("./routers/user_router")(userDal, secret);
     app.use("/api/users", usersRouter);
+
+    const booksRouter = require("./routers/book_router")(bookDal);
+    app.use("/api/books", booksRouter);
 
     app.get("*", (req, res) =>
       res.sendFile(path.resolve("..", "client", "build", "index.html"))
