@@ -19,7 +19,21 @@ class BookDal {
     return newBook.save();
   }
 
+  //find book by id
+
+  async getBookByID(id) {
+    try {
+      //finding a book by its id, with moongose. Do the book doenst exist, it will catch the error message.
+      return await this.bookModel.findById(id);
+    } catch (error) {
+      console.error("getBookByID", error.message);
+      return {};
+    }
+  }
+
   //list books by category
+
+  //find book by id
 }
 
 module.exports = mongoose => new BookDal(mongoose);

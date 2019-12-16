@@ -17,5 +17,11 @@ module.exports = dal => {
     dal.createBook(newBook).then(newBook => res.json(newBook));
   });
 
+  //find book by id.. Works...
+  router.get("/:id", (req, res) => {
+    let id = req.params.id;
+    dal.getBookByID(id).then(book => res.json(book));
+  });
+
   return router;
 };
