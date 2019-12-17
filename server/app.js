@@ -30,7 +30,7 @@ let openPaths = [
 
 // Validate the user using authentication. checkJwt checks for auth token.
 const secret = process.env.SECRET || "the cake is a lie";
-if (!process.env.SECRET) console.error("Warning: SECRET is undefined.");
+if (!process.env.SECRET) console.error("SECRET is undefined.");
 app.use(checkJwt({ secret: secret }).unless({ path: openPaths }));
 
 // This middleware checks the result of checkJwt
@@ -46,6 +46,7 @@ app.use((err, req, res, next) => {
 //requring the user and book model from the database access layer, using mongoose as a middleware to connect.
 const userDal = require("./dal/user_dal")(mongoose);
 const bookDal = require("./dal/book_dal")(mongoose);
+const categoryDal = require("./dal/category_dal")(mongoose);
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -61,6 +62,9 @@ mongoose
 
     const booksRouter = require("./routers/book_router")(bookDal);
     app.use("/api/books", booksRouter);
+
+    const categoriesRouter = require("./routers/category_router")(categoryDal);
+    app.use("/api/category", categoriesRouter);
 
     app.get("*", (req, res) =>
       res.sendFile(path.resolve("..", "client", "build", "index.html"))
