@@ -2,6 +2,10 @@ module.exports = dal => {
   let express = require("express");
   let router = express.Router();
 
+  router.get("/", (req, res) => {
+    dal.getBooks().then(book => res.json(book));
+  });
+
   //create new book
 
   router.post("/create", async (req, res) => {

@@ -5,7 +5,7 @@ module.exports = (dal, secret) => {
   const jwt = require("jsonwebtoken");
   const bcrypt = require("bcryptjs");
 
-  router.post("/create", async (req, res) => {
+  router.post("/createUser", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const isAdmin = false;

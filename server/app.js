@@ -25,7 +25,15 @@ let openPaths = [
   /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
   "/api/users/authenticate",
   "/api/users/create",
-  { url: "/api/books", methods: ["GET"] } // Open GET questions, but not POST.
+  //able to fetch books and categories without login, but not POST
+  {
+    url: "/api/books",
+    methods: ["GET"]
+  },
+  {
+    url: "/api/category",
+    methods: ["GET"]
+  } // Open GET questions, but not POST.
 ];
 
 // Validate the user using authentication. checkJwt checks for auth token.
