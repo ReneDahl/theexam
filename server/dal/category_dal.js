@@ -8,6 +8,30 @@ class CategoryDal {
     this.categoryModel = mongoose.model("category", categorySchema);
   }
 
+  async getCategories() {
+    try {
+      return await this.categoryModel.find({});
+    } catch (error) {
+      console.error("getCategories:", error.message);
+      return {};
+    }
+  }
+
+  async getCategoryByID(id) {
+    try {
+      //finding a book by its id, with moongose. Do the book doenst exist, it will catch the error message.
+      return await this.categoryModel.findById(id);
+    } catch (error) {
+      console.error("getCategoryByID", error.message);
+      return {};
+    }
+  }
+
+  async testCategories() {
+    let l = (await this.getCategories()).length;
+    console.log("Categories in system:", l);
+  }
+
   async createCategory(category) {
     let newCategory = new this.categoryModel(category);
     return newCategory.save();

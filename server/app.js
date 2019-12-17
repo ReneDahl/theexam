@@ -55,8 +55,10 @@ mongoose
 
     //
     await userDal.testUsers();
+    await bookDal.testBooks();
+    await categoryDal.testCategories();
 
-    //Routes goes here
+    //----Routes goes here----------------------------------------------------------
     const usersRouter = require("./routers/user_router")(userDal, secret);
     app.use("/api/users", usersRouter);
 
@@ -65,7 +67,7 @@ mongoose
 
     const categoriesRouter = require("./routers/category_router")(categoryDal);
     app.use("/api/category", categoriesRouter);
-
+    //------------------------------------------------------------------------------
     app.get("*", (req, res) =>
       res.sendFile(path.resolve("..", "client", "build", "index.html"))
     );

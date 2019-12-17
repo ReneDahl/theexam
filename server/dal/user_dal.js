@@ -47,8 +47,8 @@ class UserDAL {
     const users = [
       // These are just some test users with passwords.
       // The passwords are in clear text for testing purposes. (don't do this in production)
-      { username: "rdh", password: "12" },
-      { username: "mm", password: "13" }
+      { username: "rdh", password: "12", isAdmin: true },
+      { username: "mm", password: "13", isAdmin: false }
     ];
 
     let promises = [];

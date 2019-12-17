@@ -13,6 +13,20 @@ class BookDal {
     this.bookModel = mongoose.model("book", bookSchema);
   }
 
+  async getBooks() {
+    try {
+      return await this.bookModel.find({});
+    } catch (error) {
+      console.error("getBooks:", error.message);
+      return {};
+    }
+  }
+
+  async testBooks() {
+    let l = (await this.getBooks()).length;
+    console.log("Books in system:", l);
+  }
+
   //create book
   async createBook(book) {
     let newBook = new this.bookModel(book);
@@ -30,12 +44,6 @@ class BookDal {
       return {};
     }
   }
-
-  //create categoy by admin
-
-  //list books by category
-
-  //find book by id
 }
 
 module.exports = mongoose => new BookDal(mongoose);
