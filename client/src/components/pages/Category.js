@@ -13,7 +13,7 @@ export class category extends Component {
   }
 
   async getBooksFromTheAPI() {
-    await fetch("https://theexam.herokuapp.com/api/books").then(res =>
+    await fetch("http://theexam.herokuapp.com/api/books").then(res =>
       res.json().then(books => this.setState({ books }))
     );
   }

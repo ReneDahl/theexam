@@ -10,7 +10,7 @@ export class PostCategory extends Component {
   }
 
   handleDeleteCategory(id) {
-    fetch("https://theexam.herokuapp.com/category/deleteCategory/" + id, {
+    fetch("http://theexam.herokuapp.com/category/deleteCategory/" + id, {
       method: "GET",
 
       headers: {
@@ -31,7 +31,7 @@ export class PostCategory extends Component {
     });
   }
   handlePostCategory(event) {
-    fetch("https://theexam.herokuapp.com/api/category/createCategory", {
+    fetch("http://theexam.herokuapp.com/api/category/createCategory", {
       method: "POST",
       body: JSON.stringify({
         title: this.state.title
