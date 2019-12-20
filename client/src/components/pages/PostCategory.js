@@ -15,7 +15,8 @@ export class PostCategory extends Component {
 
       headers: {
         Authorization: "Bearer " + this.props.getUserToken,
-        "Content-type": "application/json; charset=UTF-8"
+        "Content-type": "application/json; charset=UTF-8",
+        Accept: "application/json"
       }
     })
       .then(response => response.json())
