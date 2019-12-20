@@ -23,7 +23,7 @@ import Login from "./Login";
 import AuthService from "./AuthService";
 
 export class App extends Component {
-  API_URL = "http://theexam.herokuapp.com/api";
+  API_URL = "https://theexam.herokuapp.com/api";
 
   constructor(props) {
     super(props);
@@ -80,13 +80,13 @@ export class App extends Component {
 
   //gets all the categories from the api.
   async getCategoriesFromTheAPI() {
-    await fetch("http://theexam.herokuapp.com/api/category").then(res =>
+    await fetch("https://theexam.herokuapp.com/api/category").then(res =>
       res.json().then(categories => this.setState({ categories }))
     );
   }
 
   async getUsersFromTheAPI() {
-    await fetch("http://theexam.herokuapp.com/api/users").then(res =>
+    await fetch("https://theexam.herokuapp.com/api/users").then(res =>
       res.json().then(users => this.setState({ users }))
     );
   }

@@ -10,7 +10,7 @@ export class Books extends Component {
 
   async postBook(title, author, category, price, seller, sellerEmail) {
     console.log(title, author);
-    fetch("http://theexam.herokuapp.com/api/books/create", {
+    fetch("https://theexam.herokuapp.com/api/books/create", {
       method: "POST",
       body: JSON.stringify({
         title: title,
