@@ -31,6 +31,10 @@ let openPaths = [
     methods: ["GET"]
   },
   {
+    url: "/api/users/createUser",
+    methods: ["POST"]
+  },
+  {
     url: "/api/books",
     methods: ["GET"]
   },

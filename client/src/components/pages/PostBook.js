@@ -8,7 +8,7 @@ export class PostBook extends Component {
     this.state = {
       title: "",
       author: "",
-      category: "",
+      category: "select",
       price: "",
       seller: "",
       sellerEmail: ""
@@ -20,6 +20,7 @@ export class PostBook extends Component {
       [event.target.name]: event.target.value
     });
   }
+
   handlePostBook(event) {
     this.props.postBook(
       this.state.title,
@@ -29,10 +30,14 @@ export class PostBook extends Component {
       this.state.seller,
       this.state.sellerEmail
     );
-    //this.props.login()
+  }
+
+  handleChangeDropdown(event) {
+    this.setState({ category: event.target.value });
   }
 
   render() {
+    console.log(this.props.getBooksFromCategories);
     return (
       <div className="container">
         <h1>Post book</h1>
@@ -57,8 +62,13 @@ export class PostBook extends Component {
         </div>
         <div className="form-group">
           <label>Book category</label>
+          <select onChange={event => this.handleChangeDropdown(event)}>
+            {this.props.getBooksFromCategories.map(q => (
+              <option key={q._id}>{q.title}</option>
+            ))}
+          </select>
           <input
-            className="form-control"
+            className="invisible "
             onChange={event => this.handlePostBookChange(event)}
             type="text"
             name="category"

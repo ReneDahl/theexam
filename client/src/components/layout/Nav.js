@@ -32,11 +32,6 @@ export class Nav extends Component {
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/postbook" className="nav-link">
-                  Post book
-                </Link>
-              </li>
             </ul>
             <ul className="navbar-nav ml-auto">
               <li className="nav-item pull-right">

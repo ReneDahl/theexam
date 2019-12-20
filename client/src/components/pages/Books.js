@@ -28,7 +28,6 @@ export class Books extends Component {
       .then(response => response.json())
       .then(json => {
         console.log(json);
-        //this.getDataFromApi();
       });
   }
 
@@ -36,7 +35,7 @@ export class Books extends Component {
     return (
       <div className="container">
         <h1>Welcome {this.props.getUserName}</h1>
-        <p>Here you can add books {this.props.getUserToken}</p>
+        <p>Here you can add books</p>
         <PostBook
           getBooksFromCategories={this.props.getBooksFromCategories}
           postBook={(title, author, category, price, seller, sellerEmail) =>

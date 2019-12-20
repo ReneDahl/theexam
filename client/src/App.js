@@ -15,8 +15,9 @@ import Categories from "./components/pages/Categories";
 import Book from "./components/pages/Book";
 import Books from "./components/pages/Books";
 
+//Post book and category
 import PostBook from "./components/pages/PostBook";
-
+import PostCategory from "./components/pages/PostCategory";
 //Login---
 import Login from "./Login";
 import AuthService from "./AuthService";
@@ -48,8 +49,15 @@ export class App extends Component {
       if (!user) {
         console.log("The user do not exist");
         return null;
+      }
+      //a way to make roles work..
+      if (user.role.includes(0)) {
+        console.log("du er admin");
+        const resp = await this.Auth.login(username, password);
+        console.log("Authentication:", resp.msg);
+        navigate("/postcategory");
       } else {
-        console.log(username, password);
+        console.log(username, password, user.role);
         const resp = await this.Auth.login(username, password);
         console.log("Authentication:", resp.msg);
         navigate("/books");
@@ -132,6 +140,11 @@ export class App extends Component {
             postBook={(title, author) => this.postBook(title, author)}
             path="/postbook"
           ></PostBook>
+          <PostCategory
+            getCategories={this.state.categories}
+            getUserToken={this.Auth.getToken()}
+            path="/postcategory"
+          ></PostCategory>
         </Router>
       </div>
     );

@@ -12,7 +12,6 @@ module.exports = (dal, secret) => {
   router.post("/createUser", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const isAdmin = false;
 
     //Check if the username and password is empty, if it will print console log.
     if (username === "" || password === "") {
@@ -22,7 +21,7 @@ module.exports = (dal, secret) => {
       return null;
     } else {
       console.log(username);
-      const user = { username: username, password: password, isAdmin: isAdmin };
+      const user = { username: username, password: password, role: "1" };
       bcrypt.hash(user.password, 10, async (err, hash) => {
         user.hash = hash; // The hash has been made, and is stored on the user object.
         delete user.password; // The clear text password is no longer needed
