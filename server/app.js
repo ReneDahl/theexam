@@ -9,6 +9,7 @@ const checkJwt = require("express-jwt");
 //Configuration of the server
 require("dotenv").config();
 const app = express();
+app.use(express.static("../client/build"));
 const port = process.env.PORT || 8080;
 const uri = process.env.ATLAS_URI;
 //using cors for allowing http requests
