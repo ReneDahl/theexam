@@ -1,5 +1,5 @@
 class CategoryDal {
-  //constructor for create a user model class
+  //constructor for create a category model class
   constructor(mongoose) {
     this.mongoose = mongoose;
     const categorySchema = new mongoose.Schema({

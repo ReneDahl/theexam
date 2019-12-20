@@ -19,13 +19,17 @@ app.use(express.json());
 app.use(morgan("combined"));
 
 //Tells express where the static files is
-app.use(express.static("../client/build"));
+app.use(express.static(path.resolve("..", "client", "build")));
 // for the env file, where the database string is
 let openPaths = [
   /^(?!\/api).*/gim, // Open everything that doesn't begin with '/api'
   "/api/users/authenticate",
   "/api/users/create",
   //able to fetch books and categories without login, but not POST
+  {
+    url: "/api/users",
+    methods: ["GET"]
+  },
   {
     url: "/api/books",
     methods: ["GET"]
@@ -61,7 +65,7 @@ mongoose
   .then(async () => {
     console.log("Database connected");
 
-    //
+    //----Test data goes here ------------------------------------------------------
     await userDal.testUsers();
     await bookDal.testBooks();
     await categoryDal.testCategories();

@@ -5,6 +5,10 @@ module.exports = (dal, secret) => {
   const jwt = require("jsonwebtoken");
   const bcrypt = require("bcryptjs");
 
+  router.get("/", (req, res) => {
+    dal.getUsers().then(book => res.json(book));
+  });
+
   router.post("/createUser", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;

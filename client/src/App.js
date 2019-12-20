@@ -1,26 +1,141 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { Component } from "react";
+import { Router, redirectTo, navigate } from "@reach/router";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+import "./custom.css";
+import "bootstrap/dist/js/bootstrap.js";
+import "jquery/dist/jquery.js";
+import $ from "jquery";
+import Popper from "popper.js"; // for bootstrap
+
+import Nav from "./components/layout/Nav";
+import Category, { category } from "./components/pages/Category";
+import Categories from "./components/pages/Categories";
+import Book from "./components/pages/Book";
+import Books from "./components/pages/Books";
+
+import PostBook from "./components/pages/PostBook";
+
+//Login---
+import Login from "./Login";
+import AuthService from "./AuthService";
+
+export class App extends Component {
+  API_URL = "http://localhost:8080/api";
+
+  constructor(props) {
+    super(props);
+    // Initialize the auth service with the path of the API authentication route.
+    this.Auth = new AuthService(`${this.API_URL}/users/authenticate`);
+    this.state = {
+      categories: [],
+      users: []
+    };
+  }
+
+  async getData() {
+    const resp = await this.Auth.fetch(`${this.API_URL}/books`);
+    const data = await resp.json();
+    this.setState({
+      books: data
+    });
+  }
+
+  async login(username, password) {
+    try {
+      const user = this.state.users.find(user => user.username === username);
+      if (!user) {
+        console.log("The user do not exist");
+        return null;
+      } else {
+        console.log(username, password);
+        const resp = await this.Auth.login(username, password);
+        console.log("Authentication:", resp.msg);
+        navigate("/books");
+        this.getData();
+      }
+    } catch (e) {
+      console.log("Login", e);
+    }
+  }
+
+  async postBook(title, author) {
+    console.log(title, author);
+  }
+
+  async logout(event) {
+    event.preventDefault();
+    this.Auth.logout();
+    navigate("/");
+  }
+
+  //gets all the categories from the api.
+  async getCategoriesFromTheAPI() {
+    await fetch("http://localhost:8080/api/category").then(res =>
+      res.json().then(categories => this.setState({ categories }))
+    );
+  }
+
+  async getUsersFromTheAPI() {
+    await fetch("http://localhost:8080/api/users").then(res =>
+      res.json().then(users => this.setState({ users }))
+    );
+  }
+
+  getCategory(_id) {
+    return this.state.categories.find(c => c._id === _id);
+  }
+
+  getBook(title) {
+    return this.state.books.find(c => c._id === title);
+  }
+  //gets all the books from the api.
+
+  componentDidMount() {
+    this.getCategoriesFromTheAPI();
+    this.getUsersFromTheAPI();
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Nav></Nav>
+        <button
+          onClick={event => {
+            this.logout(event);
+          }}
         >
-          Learn Reactdd
-        </a>
-      </header>
-    </div>
-  );
+          Logout.
+        </button>
+        <Router>
+          <Login
+            login={(username, password) => this.login(username, password)}
+            path="/login"
+          />
+          <Categories categories={this.state.categories} path="/"></Categories>
+
+          <Category
+            path="/category/:title/:_id"
+            getCategory={_id => this.getCategory(_id)}
+          ></Category>
+
+          <Book path="/book/:title"></Book>
+          <Books
+            getUserName={this.Auth.getUsername()}
+            getUserToken={this.Auth.getToken()}
+            getBooksFromCategories={this.state.categories}
+            path="/books"
+          ></Books>
+          <Login path="/login"></Login>
+          <PostBook
+            postBook={(title, author) => this.postBook(title, author)}
+            path="/postbook"
+          ></PostBook>
+        </Router>
+      </div>
+    );
+  }
 }
 
 export default App;
